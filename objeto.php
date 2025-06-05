@@ -15,7 +15,7 @@ class personaje {
    public $nombre;
    public $apellido;
    public $fecha_nacimiento;
-   public $comido_favorita; 
+   public $comida_favorita; 
 }
 class Datos{
 public static function tipos_de_obras(){

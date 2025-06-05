@@ -3,12 +3,17 @@ include('libreria/plantilla.php');
 include('objeto.php');
 plantilla::aplicar();
 
-$obra = new obra();
+$codigo_obra = $_GET['codigo'] ?? null;
+$ruta = "datos/$codigo_obra.json";
 
-$id = $_GET['id'] ?? null;
-$ruta = "datos/$id.json";
+if ($codigo_obra && file_exists($ruta)) {
+    $json = file_get_contents($ruta);
+    $obra = json_decode($json);
+} else {
+    $obra = new obra();
+}
 
-if($_POST){
+if ($_POST) {
     $obra->codigo = $_POST['codigo'];
     $obra->foto = $_POST['foto'];
     $obra->tipo = $_POST['tipo'];
@@ -17,21 +22,13 @@ if($_POST){
     $obra->pais = $_POST['pais'];
     $obra->autor = $_POST['autor'];
 
-    if(!is_dir(filename: 'datos')){
-        mkdir(directory: 'datos');
-    }
-
-    if(!is_dir(filename: 'datos')){ 
-        plantilla::aplicar();
-        echo "<div class='alert alert-danger'>Error al crear la carpeta de datos</div>";
-        echo "<a href='index.php' class='btn btn-primary'>Volver</a>";
-        exit();
+    if (!is_dir('datos')) {
+        mkdir('datos');
     }
 
     $ruta = 'datos/' . $obra->codigo . '.json';
-    $json = json_encode(value: $obra);
-
-    file_put_contents(filename: $ruta, data: $json);
+    $json = json_encode($obra);
+    file_put_contents($ruta, $json);
 
     plantilla::aplicar();
     echo "<div class='alert alert-success'>Obra guardada correctamente</div>";
@@ -42,11 +39,6 @@ if($_POST){
 
 <form method="post" action="editar.php">
     <input type="hidden" name="id" value="<?= $obra->codigo ?>">
-
-    <div class="mb-3">
-        <label for="codigo" class="form-label">Código</label>
-        <input type="text" class="form-control" id="codigo" name="codigo" value="<?= $obra->codigo ?>" required>
-    </div>
 
     <div class="mb-3">
         <label for="tipo" class="form-label">Tipo</label>
@@ -82,10 +74,10 @@ if($_POST){
     </div>
 
     <div class="mb-3">
-        <label for="foto" class="form-label">Foto</label>
+        <label for="foto" class="form-label">Foto URL</label>
         <input type="text" class="form-control" id="foto" name="foto" value="<?= $obra->foto ?>">
     </div>
 
-    <button type="submit" class="btn btn-success">Guardar cambios</button>
+    <button type="submit" class="btn btn-success">Guardar</button>
     <a href="index.php" class="btn btn-secondary">Cancelar</a>
 </form>

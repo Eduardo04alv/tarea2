@@ -86,6 +86,6 @@ if($_POST){
         <input type="text" class="form-control" id="foto" name="foto" value="<?= $obra->foto ?>">
     </div>
 
-    <button type="submit" class="btn btn-success">Guardar cambios</button>
+    <button type="submit" class="btn btn-success">Guardar</button>
     <a href="index.php" class="btn btn-secondary">Cancelar</a>
 </form>
